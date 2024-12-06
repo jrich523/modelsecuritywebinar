@@ -42,7 +42,7 @@ fi
 
 
 # this will put the activity stream to stderr, and store the json object return
-OUTPUT=$(guardian-client scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
+OUTPUT=$(guardian-client --log-level debug scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
     echo "❌ Failed to scan model!"
