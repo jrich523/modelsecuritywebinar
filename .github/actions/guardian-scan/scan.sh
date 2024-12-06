@@ -1,5 +1,4 @@
 #!/bin/bash
-set -e
 
 MODEL_FILE=$1
 BUCKET_PATH=$2
