@@ -24,6 +24,11 @@ jobs:
           cache: 'pip'
       
       - uses: ./.github/actions/guardian-scan
+        env:
+          GUARDIAN_SCANNER_CLIENT_ID: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
+          GUARDIAN_SCANNER_CLIENT_SECRET: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
+          GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ secrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          GUARDIAN_ENDPOINT: ${{ secrets.GUARDIAN_ENDPOINT }}
         with:
           model_file: 'logistic_model.pkl'
           bucket_path: "${{ vars.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
