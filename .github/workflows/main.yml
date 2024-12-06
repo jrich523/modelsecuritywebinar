@@ -27,12 +27,12 @@ jobs:
         env:
           GUARDIAN_SCANNER_CLIENT_ID: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
           GUARDIAN_SCANNER_CLIENT_SECRET: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
-          GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ secrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
-          GUARDIAN_ENDPOINT: ${{ secrets.GUARDIAN_ENDPOINT }}
+          GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          GUARDIAN_ENDPOINT: ${{ vars.GUARDIAN_ENDPOINT }}
         with:
           model_file: 'logistic_model.pkl'
           bucket_path: "${{ vars.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
           guardian_client_id: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
           guardian_client_secret: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
-          guardian_token_endpoint: ${{ secrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
-          guardian_endpoint: ${{ secrets.GUARDIAN_ENDPOINT }}
+          guardian_token_endpoint: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          guardian_endpoint: ${{ vars.GUARDIAN_ENDPOINT }}
