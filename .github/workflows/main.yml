@@ -1,0 +1,33 @@
+name: Guardian Scan
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions: 
+   pull-requests: write 
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - uses: ./.github/actions/guardian-scan
+        with:
+          model_file: 'logistic_model.pkl'
+          bucket_path: "s3://${{ secrets.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
+          guardian_client_id: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
+          guardian_client_secret: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
+          guardian_token_endpoint: ${{ secrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          guardian_endpoint: ${{ secrets.GUARDIAN_ENDPOINT }}

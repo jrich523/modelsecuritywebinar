@@ -1,0 +1,35 @@
+name: 'Guardian Scan'
+description: 'Run a guardian scan with custom model and bucket path'
+inputs:
+  model_file:
+    description: 'Path to the model file'
+    required: true
+  bucket_path:
+    description: 'Path to S3 bucket'
+    required: true
+  guardian_client_id:
+    description: 'Guardian Scanner Client ID'
+    required: true
+  guardian_client_secret:
+    description: 'Guardian Scanner Client Secret'
+    required: true
+  guardian_token_endpoint:
+    description: 'Guardian Scanner OIDC Token Endpoint'
+    required: true
+  guardian_endpoint:
+    description: 'Guardian Endpoint'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+
+    - name: Scan Model
+      shell: bash
+      env:
+          GUARDIAN_SCANNER_CLIENT_ID: ${{ inputs.guardian_client_id }}
+          GUARDIAN_SCANNER_CLIENT_SECRET: ${{ inputs.guardian_client_secret }}
+          GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ inputs.guardian_token_endpoint }}
+          GUARDIAN_ENDPOINT: ${{ inputs.guardian_endpoint }}
+      run: ${{ github.action_path }}/scan.sh "${{ inputs.model_file }}" "${{ inputs.bucket_path }}"
+
