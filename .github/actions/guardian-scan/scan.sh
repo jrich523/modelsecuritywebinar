@@ -26,7 +26,7 @@ if [ $EXIT_CODE -ne 0 ]; then
     exit $EXIT_CODE
 fi
 
-OUTPUT=$(aws s3 cp "${MODEL_FILE}" "${BUCKET_PATH}" 2>&1)
+OUTPUT=$(aws s3 cp "${MODEL_FILE}" "${BUCKET_MODEL_PATH}" 2>&1)
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
     echo "❌ Failed to copy to S3"
@@ -45,6 +45,7 @@ OUTPUT=$(guardian-client scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
 EXIT_CODE=$?
 if [ $EXIT_CODE -ne 0 ]; then
     echo "❌ Failed to scan model!"
+    echo "Error output: $OUTPUT"
     exit $EXIT_CODE
 fi
 echo "Result:"
@@ -76,6 +77,8 @@ COMMENT_BODY+="| 🔴 CRITICAL | $CRITICAL |\n"
 COMMENT_BODY+="| 🟠 HIGH | $HIGH |\n"
 COMMENT_BODY+="| 🟡 MEDIUM | $MEDIUM |\n"
 COMMENT_BODY+="| 🔵 LOW | $LOW |\n"
+
+COMMENT_BODY=$(echo -e "$COMMENT_BODY")
 
 # Find existing comment
 COMMENT_ID=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.body | startswith("## Protect AI Guardian Scan Results")) | .id')
