@@ -31,7 +31,7 @@ runs:
           GUARDIAN_SCANNER_CLIENT_SECRET: ${{ inputs.guardian_client_secret }}
           GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ inputs.guardian_token_endpoint }}
           GUARDIAN_ENDPOINT: ${{ inputs.guardian_endpoint }}
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
       run: |
         export GUARDIAN_SCANNER_CLIENT_ID="${GUARDIAN_SCANNER_CLIENT_ID}"
         export GUARDIAN_SCANNER_CLIENT_SECRET="${GUARDIAN_SCANNER_CLIENT_SECRET}"
