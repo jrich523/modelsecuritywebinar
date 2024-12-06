@@ -26,8 +26,8 @@ jobs:
       - uses: ./.github/actions/guardian-scan
         with:
           model_file: 'logistic_model.pkl'
-          bucket_path: "s3://${{ secrets.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
+          bucket_path: "s3://${{ vars.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
           guardian_client_id: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
           guardian_client_secret: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
-          guardian_token_endpoint: ${{ secrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          guardian_token_endpoint: ${{ esecrets.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
           guardian_endpoint: ${{ secrets.GUARDIAN_ENDPOINT }}
