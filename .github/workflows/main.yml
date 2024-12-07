@@ -8,6 +8,7 @@ permissions:
 
 jobs:
   scan:
+    name: Guardian Scan Job
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -24,6 +25,7 @@ jobs:
           cache: 'pip'
       
       - uses: ./.github/actions/guardian-scan
+        name: Guardian Scan
         env:
           GUARDIAN_SCANNER_CLIENT_ID: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
           GUARDIAN_SCANNER_CLIENT_SECRET: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
