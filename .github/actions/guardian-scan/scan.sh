@@ -45,7 +45,7 @@ fi
 OUTPUT=$(guardian-client --log-level debug scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
 EXIT_CODE=$?
 RESULT=$(echo "$OUTPUT" | jq -r ".aggregate_eval_outcome") || "ERROR"
-if [[ $EXIT_CODE -ne 0 && $EVAL_OUTCOME != "FAIL" ]]; then
+if [[ $EXIT_CODE -ne 0 && "$RESULT" != "FAIL" ]]; then
     echo "❌ Failed to scan model!"
     echo "Error output: $OUTPUT"
     exit $EXIT_CODE
