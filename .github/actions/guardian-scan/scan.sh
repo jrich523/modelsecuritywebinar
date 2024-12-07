@@ -44,7 +44,8 @@ fi
 # this will put the activity stream to stderr, and store the json object return
 OUTPUT=$(guardian-client --log-level debug scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
 EXIT_CODE=$?
-if [ $EXIT_CODE -ne 0 ]; then
+RESULT=$(echo "$OUTPUT" | jq -r ".aggregate_eval_outcome") || "ERROR"
+if [[ $EXIT_CODE -ne 0 && $EVAL_OUTCOME != "FAIL" ]]; then
     echo "❌ Failed to scan model!"
     echo "Error output: $OUTPUT"
     exit $EXIT_CODE
@@ -54,7 +55,7 @@ echo "$OUTPUT"
 
 #format and save comment body
 
-RESULT=$(echo "$OUTPUT" | jq -r ".aggregate_eval_outcome")
+
 ISSUES=$(echo "$OUTPUT" | jq -r .scan_summary.issue_counts)
 COMMENT_BODY="## Protect AI Guardian Scan Results\n\n"
 
