@@ -32,10 +32,6 @@ runs:
           GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ inputs.guardian_token_endpoint }}
           GUARDIAN_ENDPOINT: ${{ inputs.guardian_endpoint }}
           GH_TOKEN: ${{ github.token }}
-      run: |
-        export GUARDIAN_SCANNER_CLIENT_ID="${GUARDIAN_SCANNER_CLIENT_ID}"
-        export GUARDIAN_SCANNER_CLIENT_SECRET="${GUARDIAN_SCANNER_CLIENT_SECRET}"
-        export GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT="${GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT}"
-        export GUARDIAN_ENDPOINT="${GUARDIAN_ENDPOINT}"
-        ${{ github.action_path }}/scan.sh "${{ inputs.model_file }}" "${{ inputs.bucket_path }}"
+          PR_NUMBER: ${{ github.event.number }}
+      run: ${{ github.action_path }}/scan.sh "${{ inputs.model_file }}" "${{ inputs.bucket_path }}"
 
