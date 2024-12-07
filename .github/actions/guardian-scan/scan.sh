@@ -84,13 +84,13 @@ COMMENT_BODY=$(echo -e "$COMMENT_BODY")
 # Find existing comment
 URL=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.body | startswith("## Protect AI Guardian Scan Results")) | .url')
 
-if [ ! -z "$COMMENT_ID" ]; then
+if [ -n "$URL" ]; then
     # Update existing comment
     gh api --method PATCH "$URL" \
       -f body="$COMMENT_BODY"
 else
     # Create new comment
-    gh pr comment $PR_NUMBER -b "$COMMENT_BODY"
+    gh pr comment "$PR_NUMBER" -b "$COMMENT_BODY"
 fi
 
 if [ "$RESULT" == "FAIL" ]; then
