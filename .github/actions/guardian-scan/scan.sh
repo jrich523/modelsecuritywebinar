@@ -82,12 +82,11 @@ COMMENT_BODY+="| 🔵 LOW | $LOW |\n"
 COMMENT_BODY=$(echo -e "$COMMENT_BODY")
 
 # Find existing comment
-COMMENT_ID=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.body | startswith("## Protect AI Guardian Scan Results")) | .id')
+URL=$(gh pr view $PR_NUMBER --json comments --jq '.comments[] | select(.body | startswith("## Protect AI Guardian Scan Results")) | .url')
 
 if [ ! -z "$COMMENT_ID" ]; then
     # Update existing comment
-    gh api --method PATCH \
-      "/repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" \
+    gh api --method PATCH "$URL" \
       -f body="$COMMENT_BODY"
 else
     # Create new comment
