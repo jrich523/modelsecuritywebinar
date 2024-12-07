@@ -64,6 +64,7 @@ if [ "$RESULT" == "PASS" ]; then
     COMMENT_BODY+="✅ **Status: PASS**\n\n"
 else
     COMMENT_BODY+="❌ **Status: FAIL**\n\n"
+    echo "$OUTPUT" | jq -r '.policy_violations[] | "::error title=\(.policy_name)::\(.compliance_issues[0])"'
 fi
 
 # Extract values from the ISSUES JSON
