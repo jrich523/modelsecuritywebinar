@@ -88,9 +88,16 @@ URL=$(gh pr view "$PR_NUMBER" --json comments --jq '.comments[] | select(.body |
 if [ -n "$URL" ]; then
     # Update existing comment
     COMMENT_ID="${URL##*-}"
-    gh api --method PATCH \
+    PATCH_RESULT=$(gh api --method PATCH \
       "/repos/$GITHUB_REPOSITORY/issues/comments/$COMMENT_ID" \
-      -f body="$COMMENT_BODY"
+      -f body="$COMMENT_BODY")
+    EXIT_CODE=$?
+    if [ $EXIT_CODE -ne 0 ]; then
+    echo "Failed to update comment!"
+    echo "Exit code: $EXIT_CODE"
+    echo "Error output: $PATCH_RESULT"
+fi
+
 else
     # Create new comment
     gh pr comment "$PR_NUMBER" -b "$COMMENT_BODY"
