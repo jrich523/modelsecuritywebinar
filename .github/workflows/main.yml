@@ -12,12 +12,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
       
       - uses: actions/setup-python@v5
         with:
@@ -31,10 +25,13 @@ jobs:
           GUARDIAN_SCANNER_CLIENT_SECRET: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
           GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
           GUARDIAN_ENDPOINT: ${{ vars.GUARDIAN_ENDPOINT }}
+          GUARDIAND_API_ENDPOINT: ${{ vars.GUARDIAN_API_ENDPOINT }}
+          LICENSE_ID: ${{ secrets.LICENSE_ID }}
         with:
           model_file: 'unsafe_model.pkl'
-          bucket_path: "${{ vars.BUCKET_NAME }}/scans/pr-${{ github.event.pull_request.number }}"
           guardian_client_id: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
           guardian_client_secret: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
           guardian_token_endpoint: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
           guardian_endpoint: ${{ vars.GUARDIAN_ENDPOINT }}
+          guardian_api_endpoint: ${{ vars.GUARDIAN_API_ENDPOINT }}
+          license_id: ${{ secrets.LICENSE_ID }}
