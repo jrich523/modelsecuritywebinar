@@ -7,7 +7,7 @@ services:
       - JCLOUDS_ENDPOINT=http://0.0.0.0:80
       - JCLOUDS_FILESYSTEM_BASEDIR=/data
     volumes:
-      - ./${MODEL_FILE}:/data/bucket/${MODEL_FILE}
+      - ${LOCAL_MODEL_PATH}:/data/bucket/${MODEL_FILE}
   
   guardian-worker:
     image: proxy.platform.protectai.com/proxy/protectai/268285133770.dkr.ecr.us-west-2.amazonaws.com/guardian-workers:0.3.4

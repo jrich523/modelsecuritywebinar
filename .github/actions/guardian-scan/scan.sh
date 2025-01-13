@@ -2,6 +2,7 @@
 
 export MODEL_FILE=$1
 export BUCKET_MODEL_PATH="s3://bucket/$MODEL_FILE"
+export LOCAL_MODEL_PATH="${PWD}/${MODEL_FILE}"
 
 echo "Starting Guardian scan..."
 
@@ -14,7 +15,7 @@ if [ $EXIT_CODE -ne 0 ]; then
     exit $EXIT_CODE
 fi
 echo "$LICENSE_ID" | docker login proxy.platform.protectai.com --username user --password-stdin
-docker compose -f .github/actions/guardian-scan/docker-compose.yaml up -d
+docker compose -f .github/actions/guardian-scan/docker-compose.yaml --project-directory "${GITHUB_WORKSPACE}" up -d
 echo "initiating scan on $BUCKET_MODEL_PATH"
 # this will put the activity stream to stderr, and store the json object return
 OUTPUT=$(guardian-client scan --poll-interval-secs 2 "${BUCKET_MODEL_PATH}")
