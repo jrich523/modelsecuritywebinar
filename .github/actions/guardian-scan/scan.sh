@@ -33,7 +33,7 @@ docker compose -f .github/actions/guardian-scan/docker-compose.yaml down
 #format and save comment body
 
 
-ISSUES=$(echo "$OUTPUT" | jq -r .scan_summary.issue_counts)
+ISSUES=$(echo "$OUTPUT" | jq -r .aggregate_eval_summary)
 COMMENT_BODY="## Protect AI Guardian Scan Results\n\n"
 
 # Add result with emoji
@@ -45,10 +45,10 @@ else
 fi
 
 # Extract values from the ISSUES JSON
-CRITICAL=$(echo "$ISSUES" | jq -r '.CRITICAL')
-HIGH=$(echo "$ISSUES" | jq -r '.HIGH')
-MEDIUM=$(echo "$ISSUES" | jq -r '.MEDIUM')
-LOW=$(echo "$ISSUES" | jq -r '.LOW')
+CRITICAL=$(echo "$ISSUES" | jq -r '.critical_count')
+HIGH=$(echo "$ISSUES" | jq -r '.high_count')
+MEDIUM=$(echo "$ISSUES" | jq -r '.medium_count')
+LOW=$(echo "$ISSUES" | jq -r '.low_count')
 
 # Create markdown table
 COMMENT_BODY+="| Severity | Count |\n"
