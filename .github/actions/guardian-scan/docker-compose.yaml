@@ -1,0 +1,54 @@
+services:
+  s3proxy:
+    image: andrewgaul/s3proxy
+    environment:
+      - S3PROXY_AUTHORIZATION=none
+      - JCLOUDS_PROVIDER=filesystem
+      - JCLOUDS_ENDPOINT=http://0.0.0.0:80
+      - JCLOUDS_FILESYSTEM_BASEDIR=/data
+    volumes:
+      - ${LOCAL_MODEL_PATH}:/data/bucket/${MODEL_FILE}
+  
+  guardian-worker:
+    image: proxy.platform.protectai.com/proxy/protectai/268285133770.dkr.ecr.us-west-2.amazonaws.com/guardian-workers:0.3.4
+    command: ["rq worker --url redis://:P@ssw0rd!@valkey:6379"]
+    environment:
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - REDIS_DSN=redis://:P@ssw0rd!@valkey:6379
+      - REDIS_PASSWORD=P@ssw0rd!
+      - LOG_LEVEL=INFO
+      - STORAGE_BACKEND=redis
+      - GUARDIAN_SCANNER_CLIENT_ID
+      - GUARDIAN_SCANNER_CLIENT_SECRET
+      - GUARDIAN_API_ENDPOINT
+      - AWS_ENDPOINT_URL_S3=http://s3proxy
+      - AWS_ACCESS_KEY_ID=foo
+      - AWS_SECRET_ACCESS_KEY=bar
+
+  guardian-worker-sync:
+    image: proxy.platform.protectai.com/proxy/protectai/268285133770.dkr.ecr.us-west-2.amazonaws.com/guardian-workers:0.3.4
+    command: ["python3 workers/poller.py"]
+    environment:
+      - REDIS_HOST=valkey
+      - REDIS_PORT=6379
+      - REDIS_DSN=redis://:P@ssw0rd!@valkey:6379
+      - REDIS_PASSWORD=P@ssw0rd!
+      - LOG_LEVEL=INFO
+      - STORAGE_BACKEND=redis
+      - GUARDIAN_SCANNER_CLIENT_ID
+      - GUARDIAN_SCANNER_CLIENT_SECRET
+      - GUARDIAN_API_ENDPOINT
+
+
+  valkey:
+    image: bitnami/valkey:8.0.1-debian-12-r3
+    environment:
+      - BITNAMI_DEBUG=false
+      - VALKEY_REPLICATION_MODE=primary
+      - ALLOW_EMPTY_PASSWORD=no
+      - VALKEY_PASSWORD=P@ssw0rd!
+      - VALKEY_PRIMARY_PASSWORD=P@ssw0rd!
+      - VALKEY_TLS_ENABLED=no
+      - VALKEY_PORT=6379
+      - VALKEY_DISABLE_COMMANDS=FLUSHDB,FLUSHALL

@@ -1,0 +1,37 @@
+name: Guardian Scan
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions: 
+   pull-requests: write 
+
+jobs:
+  scan:
+    name: Guardian Scan Job
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - uses: ./.github/actions/guardian-scan
+        name: Guardian Scan
+        env:
+          GUARDIAN_SCANNER_CLIENT_ID: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
+          GUARDIAN_SCANNER_CLIENT_SECRET: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
+          GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          GUARDIAN_ENDPOINT: ${{ vars.GUARDIAN_ENDPOINT }}
+          GUARDIAND_API_ENDPOINT: ${{ vars.GUARDIAN_API_ENDPOINT }}
+          LICENSE_ID: ${{ secrets.LICENSE_ID }}
+        with:
+          model_file: 'unsafe_model.pkl'
+          guardian_client_id: ${{ secrets.GUARDIAN_SCANNER_CLIENT_ID }}
+          guardian_client_secret: ${{ secrets.GUARDIAN_SCANNER_CLIENT_SECRET }}
+          guardian_token_endpoint: ${{ vars.GUARDIAN_SCANNER_OIDP_TOKEN_ENDPOINT }}
+          guardian_endpoint: ${{ vars.GUARDIAN_ENDPOINT }}
+          guardian_api_endpoint: ${{ vars.GUARDIAN_API_ENDPOINT }}
+          license_id: ${{ secrets.LICENSE_ID }}
